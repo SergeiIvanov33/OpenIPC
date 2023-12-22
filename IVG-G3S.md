@@ -17,8 +17,34 @@
 ![2](https://github.com/SergeiIvanov33/OpenIPC/blob/master/2.jpg)
 
 Затем припаять провода на 12В и GND, взятые с контактной площадки, отмеченной красной стрелкой. GND соединить с GND из предыдущего пункта, а 12В перенаправить на вход понижающего преобразователя (12В-5В) (можно использовать разобранный зарядник, работающий от прикуривателя). С выхода преобразователя взять +5В и соединить с красным проводом USB-входа.
-## Настройка модема Huawei e3131 (420S (Мегафон)) для работы с камерой на OpenIPC
+## Настройка модема Huawei e3131 (420S (МТС)) для работы с камерой на OpenIPC
 **Модем необходимо разблокировать и перепрошить в Hilink.**
 Подробная инструкция находится [здесь](<https://www.youtube.com/watch?v=Fh9ysGLFdDM&ab_channel=%D0%90%D0%B2%D0%B8%D1%82%D0%BE%D0%B4%D0%BE%D1%80.%D0%A0%D0%A4>).
-
-
+## Интеграция модема с камерой
+На камере установить usb_modeswitch, выполнив следующие команды:
+```
+curl -o /usr/sbin/usb_modeswitch http://fpv.openipc.net/files/usb-modeswitch/musl/usb_modeswitch && chmod +x /usr/sbin/usb_modeswitch
+curl -o /usr/lib/libusb-1.0.so.0.3.0 http://fpv.openipc.net/files/usb-modeswitch/musl/libusb-1.0.so.0.3.0 && chmod +x /usr/lib/libusb-1.0.so.0.3.0
+ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so
+ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
+```
+Альтернативное хранилище:
+```
+curl -o /usr/sbin/usb_modeswitch http://fpv.openipc.net/files/usb-modeswitch/glibc/usb_modeswitch && chmod +x /usr/sbin/usb_modeswitch
+curl -o /usr/lib/libusb-1.0.so.0.3.0 http://fpv.openipc.net/files/usb-modeswitch/glibc/libusb-1.0.so.0.3.0 && chmod +x /usr/lib/libusb-1.0.so.0.3.0
+ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so
+ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
+ln -s -f /lib/libc-2.32.so /lib/libc.so
+```
+Затем внести этот текст в файл /etc/network/interfaces.d/eth1 (создать файл, если отсутствует):
+```
+auto eth1
+iface eth1 inet dhcp
+    pre-up sleep 4
+    pre-up if [ ! -z "`lsusb | grep 12d1:1f01`" ]; then usb_modeswitch -v 0x12d1 -p 0x1f01 -J; fi
+    pre-up if [ ! -z "`lsusb | grep 12d1:14dc`" ]; then modprobe usbserial vendor=0x12d1 product=0x14dc; fi
+    pre-up modprobe rndis_host
+    pre-up sleep 2
+```
+Затем "передернуть" модем, выполнить команду ```ifup eth1``` или перезагрузить.
+Более подробная инструкция [здесь](<https://github.com/OpenIPC/sandbox-fpv/blob/master/lte-fpv.md>).
