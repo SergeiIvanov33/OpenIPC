@@ -46,9 +46,9 @@ iface eth1 inet dhcp
     pre-up modprobe rndis_host
     pre-up sleep 2
 ```
-Затем "передернуть" модем, выполнить команду ```ifup eth1``` или перезагрузить.
+Затем "передернуть" модем, выполнить команду ```ifup eth1``` или перезагрузить.\
 Более подробная инструкция [здесь](<https://github.com/OpenIPC/sandbox-fpv/blob/master/lte-fpv.md>).
-## Настройка WireGuard-сервера
+## Установка и настройка WireGuard-сервера
 Для полного удаления WireGuard выполнить следующие команды:\
 ```sudo apt remove wireguard```\
 ```sudo apt autoclean & sudo apt autoremove```  
@@ -112,6 +112,7 @@ PersistentKeepalive = 20
 Чтобы удобно добавить VPN на телефон/планшет, на сервере установить программу для генерации qr-кодов:\
 ```apt install -y qrencode```\
 Находясь в каталоге с конфигурацией, выполнить:\
-```qrencode -t ansiutf8 -r <name_user.conf```.
+```qrencode -t ansiutf8 -r <name_user.conf```.\
+Более подробную информацию по установке сервера можно найти [здесь](https://losst.pro/prostaya-nastrojka-wireguard-linux), а по настройке сервера и клиента - [здесь](<https://profitserver.ru/knowledge-base/nastroyka-wireguard-vpn-na-svoem-servere>). 
 
 
