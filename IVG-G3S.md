@@ -87,15 +87,16 @@ iface eth1 inet dhcp
 ```wg genkey > <name_user>_privatekey```\
 ```wg pubkey < <name_user>_privatekey > <name_user>_publickey```\
 Вывести сгенерированные ключи на экран:\
-```tail <name_user>_publickey <name_user>_publickey```\
+```tail <name_user>_publickey <name_user>_privatekey```\
 Отредактировать конфигурационный файл:\
 ```nano /etc/wireguard/wg0.conf```\
 Добавить следующие строки:
 ```
 [Peer]
 PublicKey = [<name_user>_publickey]
-AllowedIPs = 10.30.0.2/32
+AllowedIPs = *.*.*.*/32
 ```
+Следует ввести ip-адрес клиента в сети VPN в поле ```Allowed IPs```.\
 Сохранить файл и перезапустить службу:\
 ```systemctl restart wg-quick@wg0```\
 Проверить статус службы:\
