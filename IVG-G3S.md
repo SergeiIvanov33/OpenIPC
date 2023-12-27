@@ -48,3 +48,69 @@ iface eth1 inet dhcp
 ```
 Затем "передернуть" модем, выполнить команду ```ifup eth1``` или перезагрузить.
 Более подробная инструкция [здесь](<https://github.com/OpenIPC/sandbox-fpv/blob/master/lte-fpv.md>).
+## Настройка WireGuard-сервера
+Для полного удаления WireGuard выполнить следующие команды:\
+```sudo apt remove wireguard```\
+```sudo apt autoclean & sudo apt autoremove```  
+
+На сервере выполнить следующую команду для того, чтобы скачать последнюю версию скрипта с GitHub:
+```curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wireguard-install.sh```\
+Дать файлу скрипта права на выполнение:\
+```chmod +x wireguard-install.sh```\
+Посмотреть публичный IP сервера:\
+```ip -br a```\
+Для запуска скрипта выполнить следующую команду:\
+```sudo ./wireguard-install.sh```\
+Далее, следуя инструкциям, вводить запрашиваемые данные. Порт, желательно, выбрать 57397.\
+Сервер с первым пользователем установлен.\
+Запустить WireGuard-службу:
+```systemctl start wg-quick@wg0.service```\
+Чтобы служба запускалась после перезагрузки сервера:\
+```systemctl enable wg-quick@wg0.service```\
+Проверить состояние службы:
+```systemctl status wg-quick@wg0.service```\
+Далее перейти в директорию, где будут хранится конфигурации сервера\
+```cd /etc/wireguard/```\
+Создать директорию для хранения данных пользователя и перейти в нее:\
+```mkdir <name_user> && cd <name_user>```\
+Сгенерировать открытый и закрытый ключи для клиента:\
+```wg genkey > privatekey```\
+```wg pubkey < <name_user>_privatekey > <name_user>_publickey```\
+Вывести сгенерированные ключи на экран:\
+```tail <name_user>_publickey <name_user>_publickey```\
+Отредактировать конфигурационный файл:\
+```nano wg0.conf```\
+Добавить следующие строки:
+```
+[Peer]
+PublicKey = [<name_user>_publickey]
+AllowedIPs = 10.30.0.2/32
+```
+Сохранить файл и перезапустить службу:\
+```systemctl restart wg-quick@wg0```\
+Проверить статус службы:\
+```systemctl status wg-quick@wg0```\
+Создать конфигурационный файл для пользователя:\
+```touch <name_user>.conf```\
+Открыть его:\
+```nano <name_user>.conf```\
+Внести следующие строки:
+```
+[Interface]
+PrivateKey = [приватный ключ <name_user>_privatekey]
+Address = 10.30.0.2/32
+DNS = 8.8.8.8
+
+[Peer]
+PublicKey = [публичный ключ <name_user>_publickey]
+Endpoint =[ ip адрес сервера ]:57397
+AllowedIPs = 0.0.0.0/0
+PersistentKeepalive = 20
+```
+Затем данные сконфигурированного файла скопировать и внести в новый тоннель пользователя.\
+Чтобы удобно добавить VPN на телефон/планшет, на сервере установить программу для генерации qr-кодов:\
+```apt install -y qrencode```\
+Находясь в каталоге с конфигурацией, выполнить:\
+```qrencode -t ansiutf8 -r myphone.conf```.
+
+
