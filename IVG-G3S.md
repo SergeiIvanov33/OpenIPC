@@ -74,7 +74,7 @@ iface eth1 inet dhcp
 Создать директорию для хранения данных пользователя и перейти в нее:\
 ```mkdir <name_user> && cd <name_user>```\
 Сгенерировать открытый и закрытый ключи для клиента:\
-```wg genkey > privatekey```\
+```wg genkey > <name_user>_privatekey```\
 ```wg pubkey < <name_user>_privatekey > <name_user>_publickey```\
 Вывести сгенерированные ключи на экран:\
 ```tail <name_user>_publickey <name_user>_publickey```\
