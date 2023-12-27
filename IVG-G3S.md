@@ -112,6 +112,6 @@ PersistentKeepalive = 20
 Чтобы удобно добавить VPN на телефон/планшет, на сервере установить программу для генерации qr-кодов:\
 ```apt install -y qrencode```\
 Находясь в каталоге с конфигурацией, выполнить:\
-```qrencode -t ansiutf8 -r myphone.conf```.
+```qrencode -t ansiutf8 -r <name_user.conf```.
 
 
