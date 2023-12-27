@@ -53,7 +53,7 @@ iface eth1 inet dhcp
 ```sudo apt remove wireguard```\
 ```sudo apt autoclean & sudo apt autoremove```  
 
-На сервере выполнить следующую команду для того, чтобы скачать последнюю версию скрипта с GitHub:
+На сервере выполнить следующую команду для того, чтобы скачать последнюю версию скрипта с GitHub:\
 ```curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wireguard-install.sh```\
 Дать файлу скрипта права на выполнение:\
 ```chmod +x wireguard-install.sh```\
@@ -63,11 +63,11 @@ iface eth1 inet dhcp
 ```sudo ./wireguard-install.sh```\
 Далее, следуя инструкциям, вводить запрашиваемые данные. Порт, желательно, выбрать 57397.\
 Сервер с первым пользователем установлен.\
-Запустить WireGuard-службу:
+Запустить WireGuard-службу:\
 ```systemctl start wg-quick@wg0.service```\
 Чтобы служба запускалась после перезагрузки сервера:\
 ```systemctl enable wg-quick@wg0.service```\
-Проверить состояние службы:
+Проверить состояние службы:\
 ```systemctl status wg-quick@wg0.service```\
 Далее перейти в директорию, где будут хранится конфигурации сервера\
 ```cd /etc/wireguard/```\
