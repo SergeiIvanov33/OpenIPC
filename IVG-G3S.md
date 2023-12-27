@@ -103,7 +103,7 @@ DNS = 8.8.8.8
 
 [Peer]
 PublicKey = [публичный ключ сервера]*
-Endpoint =[ip адрес сервера]:57397
+Endpoint = [ip адрес сервера]:57397
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 20
 ```
@@ -114,5 +114,36 @@ PersistentKeepalive = 20
 Находясь в каталоге с конфигурацией, выполнить:\
 ```qrencode -t ansiutf8 -r <name_user.conf```\
 Более подробную информацию по установке сервера можно найти [здесь](https://losst.pro/prostaya-nastrojka-wireguard-linux), а по настройке сервера и клиента - [здесь](<https://profitserver.ru/knowledge-base/nastroyka-wireguard-vpn-na-svoem-servere>). 
+## Настройка WireGuard на IVG-G3S
+1. Открыть файл ```wireguard.conf``` на камере:\
+```vi /etc/wireguard.conf```\
+Внести в него следующие строки:
+```
+[Peer]
+AllowedIPs = 10.66.66.0/24
+Endpoint = 95.66.153.204:57397
+PersistentKeepalive = 25
+PublicKey = kb/f5vmkVzJodrYTlDbA616++OFjitGHVADjV+3sXUw= 
+```
+- AllowedIPs - подсеть VPN;
+- Endpoint - ip-сервера и используемый порт;
+- PublicKey - публичный ключ сервера.
+2. Открыть файл ```wg0``` на камере:\
+```/etc/network/interfaces.d/wg0```\
+Внести в него следующие строки:
+```
+auto wg0
+iface wg0 inet static
+    address 10.66.66.6
+    netmask 255.255.255.0
+    pre-up modprobe wireguard
+    pre-up ip link add dev wg0 type wireguard
+    pre-up wg setconf wg0 /etc/wireguard.conf
+    post-down ip link del dev wg0
+```
+Здесь нужно заменить только ```address``` - ip-адрес камеры в сети VPN.
+
+
+
 
 
