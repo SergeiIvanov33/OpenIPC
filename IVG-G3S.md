@@ -79,7 +79,7 @@ iface eth1 inet dhcp
 Вывести сгенерированные ключи на экран:\
 ```tail <name_user>_publickey <name_user>_publickey```\
 Отредактировать конфигурационный файл:\
-```nano wg0.conf```\
+```nano /etc/wireguard/wg0.conf```\
 Добавить следующие строки:
 ```
 [Peer]
@@ -98,15 +98,16 @@ AllowedIPs = 10.30.0.2/32
 ```
 [Interface]
 PrivateKey = [приватный ключ <name_user>_privatekey]
-Address = 10.30.0.2/32
+Address = <ip, введенный в wg0 для <name_user>/32
 DNS = 8.8.8.8
 
 [Peer]
-PublicKey = [публичный ключ <name_user>_publickey]
-Endpoint =[ ip адрес сервера ]:57397
+PublicKey = [публичный ключ сервера]*
+Endpoint =[ip адрес сервера]:57397
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 20
 ```
+***[публичный ключ сервера]* можно посмотреть, введя в терминале сервера команду ```wg```**.\
 Затем данные сконфигурированного файла скопировать и внести в новый тоннель пользователя.\
 Чтобы удобно добавить VPN на телефон/планшет, на сервере установить программу для генерации qr-кодов:\
 ```apt install -y qrencode```\
